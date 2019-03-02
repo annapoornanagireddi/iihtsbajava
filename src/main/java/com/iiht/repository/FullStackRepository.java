@@ -1,10 +1,14 @@
 package com.iiht.repository;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -103,8 +107,13 @@ public class FullStackRepository implements IFullStackRepository{
 	public Project addProject(Project project) {
 		Query query = entityManager.createNativeQuery("insert into IIHT.TPROJECT(PROJECT,START_DT,END_DT,PRORITY) values(:projectNm,:startDt,:endDt,:priority)");
 		query.setParameter("projectNm",project.getProjectNm());
-		query.setParameter("startDt",utilDatetoSqlDate(project.getStartDt()));
-		query.setParameter("endDt", utilDatetoSqlDate(project.getEndDt()));
+		try {
+			query.setParameter("startDt",StringToSqlDate(project.getStartDt()));
+			query.setParameter("endDt", StringToSqlDate(project.getEndDt()));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		query.setParameter("priority", project.getPriority());
 		query.executeUpdate();
 		project.setStatus("Project added Successfully!!");
@@ -112,13 +121,15 @@ public class FullStackRepository implements IFullStackRepository{
 		return project;
 	}
 	
-	private java.sql.Date utilDatetoSqlDate(java.util.Date utilDate) {
-		
-	        java.sql.Date sqlDate = convertUtilToSql(utilDate);
-				return sqlDate;
+	
+	private java.sql.Date StringToSqlDate(String date) throws ParseException {
+		 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		 java.util.Date date1 = formatter.parse(date);
+		 java.sql.Date sqlDate = new java.sql.Date(date1.getTime());
+		 return sqlDate;
 	}
 	
-	private static java.sql.Date convertUtilToSql(java.util.Date uDate) {
+	private static java.sql.Date Date(java.util.Date uDate) {
         java.sql.Date sDate = new java.sql.Date(uDate.getTime());
         return sDate;
     }
@@ -141,17 +152,23 @@ public class FullStackRepository implements IFullStackRepository{
 		query.setParameter("parentId",task.getParentTaskId());
 		query.setParameter("projectId",task.getProjectId());
 		query.setParameter("task", task.getTaskNm());
-		query.setParameter("startDt",utilDatetoSqlDate(task.getStartDt()));
-		query.setParameter("endDt", utilDatetoSqlDate(task.getEndDt()));
+		try {
+			query.setParameter("startDt",StringToSqlDate(task.getStartDt()));
+			query.setParameter("endDt", StringToSqlDate(task.getEndDt()));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		query.setParameter("priority", task.getPriority());
 		query.setParameter("status",task.getStatus());
 		query.executeUpdate();
+		task.setSaveStatus("Task added Succesfully!!");
 		return task;
 	}
 
 	@Override
 	public List<Task> viewTasks() {
-		Query query = entityManager.createNativeQuery("select TA.TASK_ID,TA.PARENT_ID,TA.PROJECT_ID,TA.TASK,TA.START_DT,TA.END_DT,TA.STATUS from IIHT.TTASK TA");
+		Query query = entityManager.createNativeQuery("select TA.TASK_ID,TA.PARENT_ID,TA.PROJECT_ID,TA.TASK,TA.START_DT,TA.END_DT,TA.STATUS,TA.PRORITY from IIHT.TTASK TA");
 		 List<Task> tasks = new ArrayList<>();
 		try {
 			tasks = convertToListofTaskObjects(query.getResultList());
@@ -172,15 +189,21 @@ public class FullStackRepository implements IFullStackRepository{
 			task.setTaskNm(obj[3].toString());
 			task.setStartDt(convertStringToDate(obj[4].toString()));
 			task.setEndDt(convertStringToDate(obj[5].toString()));
+			if(null != obj[7]) {
+			task.setPriority(Integer.parseInt(obj[7].toString()));
+			}
+			if(null != obj[6]) {
 			task.setStatus(obj[6].toString());
+			}
 			tasks.add(task);
 	}
 		return tasks;
 	}
 	
-	private Date convertStringToDate(String date) throws ParseException{
-		    Date date1=new SimpleDateFormat("yyyy-MM-dd").parse(date);  
-		    return date1;
+	private String convertStringToDate(String dateInString) throws ParseException{
+		 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		 Date date = formatter.parse(dateInString);
+		    return formatter.format(date);
 	}
 
 	@Override
@@ -248,5 +271,69 @@ public class FullStackRepository implements IFullStackRepository{
 		}
 		 return projects;
 	}
+
+	@Override
+	public Task endTask(Task task) {
+		Query query = entityManager.createNativeQuery("UPDATE IIHT.TTASK TTASK SET TTASK.STATUS =:status WHERE TTASK.TASK_ID=:taskId");
+		query.setParameter("status","complete");
+		query.setParameter("taskId",task.getTaskId());
+		query.executeUpdate();
+		task.setSaveStatus("Task updated Succesfully!!");
+		return task;
+	}
+
+	@Override
+	public List<Task> sortTasksByStartDt() {
+			Query query = entityManager.createNativeQuery("select TA.TASK_ID,TA.PARENT_ID,TA.PROJECT_ID,TA.TASK,TA.START_DT,TA.END_DT,TA.STATUS,TA.PRORITY from IIHT.TTASK TA order by TA.START_DT asc");
+			 List<Task> tasks = new ArrayList<>();
+			try {
+				tasks = convertToListofTaskObjects(query.getResultList());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			 return tasks;
+	}
+
+	@Override
+	public List<Task> sortTasksByEndDt() {
+		Query query = entityManager.createNativeQuery("select TA.TASK_ID,TA.PARENT_ID,TA.PROJECT_ID,TA.TASK,TA.START_DT,TA.END_DT,TA.STATUS,TA.PRORITY from IIHT.TTASK TA order by TA.END_DT asc");
+		 List<Task> tasks = new ArrayList<>();
+		try {
+			tasks = convertToListofTaskObjects(query.getResultList());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 return tasks;
+	}
+
+	@Override
+	public List<Task> sortTasksByPriority() {
+		Query query = entityManager.createNativeQuery("select TA.TASK_ID,TA.PARENT_ID,TA.PROJECT_ID,TA.TASK,TA.START_DT,TA.END_DT,TA.STATUS,TA.PRORITY from IIHT.TTASK TA order by TA.PRORITY asc");
+		 List<Task> tasks = new ArrayList<>();
+		try {
+			tasks = convertToListofTaskObjects(query.getResultList());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tasks;
+	}
+
+	@Override
+	public List<Task> sortTasksByStatus() {
+		Query query = entityManager.createNativeQuery("select TA.TASK_ID,TA.PARENT_ID,TA.PROJECT_ID,TA.TASK,TA.START_DT,TA.END_DT,TA.STATUS,TA.PRORITY from IIHT.TTASK TA where TA.STATUS='complete'");
+		 List<Task> tasks = new ArrayList<>();
+		try {
+			tasks = convertToListofTaskObjects(query.getResultList());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tasks;
+	}
+	
+	
 
 }

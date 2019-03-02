@@ -43,4 +43,15 @@ public interface IFullStackDomain {
 
 	List<Project> sortProjectByPriority();
 
+	Task endTask(Task task);
+
+	List<Task> sortTasksByStartDt();
+
+	List<Task> sortTasksByEndDt();
+
+	List<Task> sortTasksByStatus();
+	
+	List<Task> sortTasksByPriority();
+
+
 }

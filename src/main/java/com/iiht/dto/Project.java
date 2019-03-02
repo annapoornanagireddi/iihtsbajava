@@ -8,9 +8,9 @@ public class Project {
 	
 	private String projectNm;
 	
-	private Date startDt;
+	private String startDt;
 	
-	private Date endDt;
+	private String endDt;
 	
 	private int priority;
 	
@@ -26,8 +26,21 @@ public class Project {
 		this.projectNm = projectNm;
 	}
 
-	public Date getStartDt() {
+
+	public String getStartDt() {
 		return startDt;
+	}
+
+	public void setStartDt(String startDt) {
+		this.startDt = startDt;
+	}
+
+	public String getEndDt() {
+		return endDt;
+	}
+
+	public void setEndDt(String endDt) {
+		this.endDt = endDt;
 	}
 
 	public int getProjectId() {
@@ -38,18 +51,7 @@ public class Project {
 		this.projectId = projectId;
 	}
 
-	public void setStartDt(Date startDt) {
-		this.startDt = startDt;
-	}
-
-	public Date getEndDt() {
-		return endDt;
-	}
-
-	public void setEndDt(Date endDt) {
-		this.endDt = endDt;
-	}
-
+	
 	public int getPriority() {
 		return priority;
 	}

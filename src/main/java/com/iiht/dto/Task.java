@@ -11,13 +11,15 @@ public class Task {
 	
 	private String taskNm;
 	
-	private Date startDt;
+	private String startDt;
 	
-	private Date endDt;
+	private String endDt;
 	
 	private int priority;
 
 	private String status;
+	
+	private String saveStatus;
 	
 
 	public int getTaskId() {
@@ -52,19 +54,20 @@ public class Task {
 		this.taskNm = taskNm;
 	}
 
-	public Date getStartDt() {
+	
+	public String getStartDt() {
 		return startDt;
 	}
 
-	public void setStartDt(Date startDt) {
+	public void setStartDt(String startDt) {
 		this.startDt = startDt;
 	}
 
-	public Date getEndDt() {
+	public String getEndDt() {
 		return endDt;
 	}
 
-	public void setEndDt(Date endDt) {
+	public void setEndDt(String endDt) {
 		this.endDt = endDt;
 	}
 
@@ -82,6 +85,14 @@ public class Task {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getSaveStatus() {
+		return saveStatus;
+	}
+
+	public void setSaveStatus(String saveStatus) {
+		this.saveStatus = saveStatus;
 	}
 	
 	

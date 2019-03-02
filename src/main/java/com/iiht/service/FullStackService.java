@@ -108,5 +108,30 @@ public class FullStackService implements IFullStackService{
 		List<Project> projects = fullStackDomain.sortProjectByPriority();
 		return projects;
 	}
+	@Override
+	public Task endTask(Task task) {
+		task = fullStackDomain.endTask(task);
+		return task;
+	}
+	@Override
+	public List<Task> sortTasksByStartDt() {
+		List<Task> tasks = fullStackDomain.sortTasksByStartDt();
+		return tasks;
+	}
+	@Override
+	public List<Task> sortTasksByEndDt() {
+		List<Task> tasks = fullStackDomain.sortTasksByEndDt();
+		return tasks;
+	}
+	@Override
+	public List<Task> sortTasksByPriority() {
+		List<Task> tasks = fullStackDomain.sortTasksByPriority();
+		return tasks;
+	}
+	@Override
+	public List<Task> sortTasksByStatus() {
+		List<Task> tasks = fullStackDomain.sortTasksByStatus();
+		return tasks;
+	}
 
 }

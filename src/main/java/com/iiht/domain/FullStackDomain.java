@@ -127,5 +127,36 @@ public class FullStackDomain implements IFullStackDomain {
 		return projects;
 	}
 
+	@Override
+	public Task endTask(Task task) {
+		task = fullStackRepository.endTask(task);
+		return task;
+	}
+
+	@Override
+	public List<Task> sortTasksByStartDt() {
+		List<Task> tasks = fullStackRepository.sortTasksByStartDt();
+		return tasks;
+	}
+
+	@Override
+	public List<Task> sortTasksByEndDt() {
+		List<Task> tasks = fullStackRepository.sortTasksByEndDt();
+		return tasks;
+	}
+
+	
+	@Override
+	public List<Task> sortTasksByPriority() {
+		List<Task> tasks = fullStackRepository.sortTasksByPriority();
+		return tasks;
+	}
+	
+	@Override
+	public List<Task> sortTasksByStatus() {
+		List<Task> tasks = fullStackRepository.sortTasksByStatus();
+		return tasks;
+	}
+
 
 }

@@ -53,6 +53,36 @@ public class FullStackController {
 		
 	}
 	
+	@RequestMapping(value="/sortTasksByStartDt",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Task> sortTasksByStartDt() {
+		List<Task> tasks = fullStackService.sortTasksByStartDt();
+		return tasks;
+		
+	}
+	
+	@RequestMapping(value="/sortTasksByEndDt",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Task> sortTasksByEndDt() {
+		List<Task> tasks = fullStackService.sortTasksByEndDt();
+		return tasks;
+		
+	}
+	
+	@RequestMapping(value="/sortTasksByPriority",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Task> sortTasksByPriority() {
+		List<Task> tasks = fullStackService.sortTasksByPriority();
+		return tasks;
+		
+	}
+	
+	@RequestMapping(value="/sortTasksByStatus",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Task> sortTasksByStatus() {
+		List<Task> tasks = fullStackService.sortTasksByStatus();
+		return tasks;
+		
+	}
+	
+	
+	
 	@RequestMapping(value="/updateUser",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
 	public User updateUser(@RequestBody User user) {
 		user = fullStackService.updateUser(user);
@@ -133,7 +163,13 @@ public class FullStackController {
 			List<Project> projects = fullStackService.searchProject();
 			return projects;
 		}
-		    
+		   
+		@RequestMapping(value="/endTask",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+		public Task endTask(@RequestBody Task task) {
+			task = fullStackService.endTask(task);
+			return task;
+			
+		}
 		
 
 }

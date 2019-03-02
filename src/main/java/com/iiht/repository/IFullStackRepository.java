@@ -41,4 +41,14 @@ public interface IFullStackRepository {
 
 	List<Project> sortProjectByPriority();
 
+	Task endTask(Task task);
+
+	List<Task> sortTasksByStartDt();
+
+	List<Task> sortTasksByEndDt();
+
+	List<Task> sortTasksByPriority();
+
+	List<Task> sortTasksByStatus();
+
 }
